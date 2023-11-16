@@ -1,8 +1,12 @@
 package io.github.dsjdevelopment.voyaz.api.controller;
 
 import io.github.dsjdevelopment.voyaz.api.domain.testimony.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/testimonials")
+@SecurityRequirement(name = "bearer-key")
 public class TestimonyController {
 
     @Autowired
@@ -48,5 +53,13 @@ public class TestimonyController {
         var testimony = repository.getReferenceById(id);
 
         return ResponseEntity.ok(new TestimonyDetailData(testimony));
+    }
+
+    @GetMapping("/testimonials-home")
+    public ResponseEntity<Page<TestimonyListData>> list(
+            @PageableDefault(size = 3) Pageable pagination) {
+        var page = repository.randomTestimony(pagination).map(TestimonyListData::new);
+
+        return ResponseEntity.ok(page);
     }
 }

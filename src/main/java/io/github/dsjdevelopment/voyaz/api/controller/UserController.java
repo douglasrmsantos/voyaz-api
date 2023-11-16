@@ -5,6 +5,7 @@ import io.github.dsjdevelopment.voyaz.api.domain.user.User;
 import io.github.dsjdevelopment.voyaz.api.domain.user.UserRegistrationData;
 import io.github.dsjdevelopment.voyaz.api.domain.user.UserRepository;
 import io.github.dsjdevelopment.voyaz.api.domain.user.UserUpdateData;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/users")
+@SecurityRequirement(name = "bearer-key")
 public class UserController {
 
     @Autowired
