@@ -18,48 +18,52 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class TestimonyController {
 
     @Autowired
-    private TestimonyRepository repository;
+    private TestimonyService testimonyService;
 
     @PostMapping
     @Transactional
     public ResponseEntity<TestimonyDetailData> register(@RequestBody @Valid TestimonyRegistrationData data, UriComponentsBuilder uriBuilder) {
-        var testimony = new Testimony(data);
-        repository.save(testimony);
 
-        var uri = uriBuilder.path("/testimonials/{id}").buildAndExpand(testimony.getId()).toUri();
+        var dto = testimonyService.registerTestimony(data);
+        var uri = uriBuilder.path("/testimonials/{id}").buildAndExpand(dto.id()).toUri();
 
-        return ResponseEntity.created(uri).body(new TestimonyDetailData(testimony));
+        return ResponseEntity.created(uri).body(dto);
+
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<TestimonyDetailData> update(@RequestBody @Valid TestimonyUpdateData data) {
-        var testimony = repository.getReferenceById(data.id());
-        testimony.dataUpdate(data);
 
-        return ResponseEntity.ok(new TestimonyDetailData(testimony));
+        var dto = testimonyService.updateTestimony(data);
+        return ResponseEntity.ok(dto);
+
+
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        repository.deleteById(id);
 
+        testimonyService.deleteTestimony(id);
         return ResponseEntity.noContent().build();
+
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TestimonyDetailData> detail(@PathVariable Long id) {
-        var testimony = repository.getReferenceById(id);
 
-        return ResponseEntity.ok(new TestimonyDetailData(testimony));
+        var dto = testimonyService.detailTestimony(id);
+        return ResponseEntity.ok(dto);
+
+
     }
 
     @GetMapping("/testimonials-home")
     public ResponseEntity<Page<TestimonyListData>> list(
             @PageableDefault(size = 3) Pageable pagination) {
-        var page = repository.randomTestimony(pagination).map(TestimonyListData::new);
 
+        var page = testimonyService.list3Testimony(pagination);
         return ResponseEntity.ok(page);
     }
 }

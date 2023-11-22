@@ -5,5 +5,4 @@ import jakarta.validation.constraints.NotNull;
 
 public record TestimonyUpdateData(@NotNull Long id, @NotBlank String photo, @NotBlank String textTestimony,
                                   @NotBlank String namePersonTestimony) {
-
 }

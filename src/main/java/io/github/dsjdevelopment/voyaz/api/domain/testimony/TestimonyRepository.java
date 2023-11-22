@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface TestimonyRepository extends JpaRepository<Testimony, Long> {
 
     @Query("""
-            SELECT t FROM Testimony t 
+            SELECT t FROM Testimony t
             ORDER BY RAND()
             """)
     Page<Testimony> randomTestimony(Pageable pagination);
