@@ -1,6 +1,7 @@
-package io.github.dsjdevelopment.voyaz.api.domain.user;
+package io.github.dsjdevelopment.voyaz.api.service;
 
-import io.github.dsjdevelopment.voyaz.api.domain.ExceptionValidation;
+import io.github.dsjdevelopment.voyaz.api.infra.exception.ExceptionValidation;
+import io.github.dsjdevelopment.voyaz.api.domain.user.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

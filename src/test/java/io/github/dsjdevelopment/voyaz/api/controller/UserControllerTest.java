@@ -2,7 +2,7 @@ package io.github.dsjdevelopment.voyaz.api.controller;
 
 import io.github.dsjdevelopment.voyaz.api.domain.user.UserDetailData;
 import io.github.dsjdevelopment.voyaz.api.domain.user.UserRegistrationData;
-import io.github.dsjdevelopment.voyaz.api.domain.user.UserService;
+import io.github.dsjdevelopment.voyaz.api.service.UserService;
 import io.github.dsjdevelopment.voyaz.api.domain.user.UserUpdateData;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;

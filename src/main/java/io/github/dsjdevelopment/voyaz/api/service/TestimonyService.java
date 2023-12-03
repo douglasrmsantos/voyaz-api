@@ -1,6 +1,6 @@
-package io.github.dsjdevelopment.voyaz.api.domain.testimony;
+package io.github.dsjdevelopment.voyaz.api.service;
 
-import jakarta.persistence.EntityNotFoundException;
+import io.github.dsjdevelopment.voyaz.api.domain.testimony.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +22,6 @@ public class TestimonyService {
 
     public TestimonyDetailData updateTestimony(TestimonyUpdateData data) {
 
-        if (!repository.existsById(data.id())) throw new EntityNotFoundException( "Testimony not found:" + data.id());
         var testimony = repository.getReferenceById(data.id());
         testimony.dataUpdate(data);
         return new TestimonyDetailData(testimony);
@@ -31,7 +30,6 @@ public class TestimonyService {
 
     public TestimonyDetailData detailTestimony(Long id) {
 
-        if (!repository.existsById(id)) throw new EntityNotFoundException( "Testimony not found:" + id);
         var testimony = repository.getReferenceById(id);
         return new TestimonyDetailData(testimony);
 
@@ -43,11 +41,9 @@ public class TestimonyService {
 
     }
 
-    public Object deleteTestimony(Long id) {
+    public void deleteTestimony(Long id) {
 
-        if (!repository.existsById(id)) throw new EntityNotFoundException( "Testimony not found:" + id);
         repository.deleteById(id);
-        return null;
 
     }
 }

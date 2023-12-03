@@ -1,7 +1,7 @@
 package io.github.dsjdevelopment.voyaz.api.controller;
 
 import io.github.dsjdevelopment.voyaz.api.domain.user.UserRegistrationData;
-import io.github.dsjdevelopment.voyaz.api.domain.user.UserService;
+import io.github.dsjdevelopment.voyaz.api.service.UserService;
 import io.github.dsjdevelopment.voyaz.api.domain.user.UserUpdateData;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;

@@ -1,11 +1,12 @@
 package io.github.dsjdevelopment.voyaz.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.dsjdevelopment.voyaz.api.domain.testimony.TestimonyDetailData;
-import io.github.dsjdevelopment.voyaz.api.domain.testimony.TestimonyListData;
-import io.github.dsjdevelopment.voyaz.api.domain.testimony.TestimonyRegistrationData;
-import io.github.dsjdevelopment.voyaz.api.domain.testimony.TestimonyUpdateData;
-import io.github.dsjdevelopment.voyaz.api.service.TestimonyService;
+import io.github.dsjdevelopment.voyaz.api.domain.destiny.DestinyDetailData;
+import io.github.dsjdevelopment.voyaz.api.domain.destiny.DestinyListData;
+import io.github.dsjdevelopment.voyaz.api.domain.destiny.DestinyRegistrationData;
+import io.github.dsjdevelopment.voyaz.api.domain.destiny.DestinyUpdateData;
+import io.github.dsjdevelopment.voyaz.api.infra.exception.ExceptionValidation;
+import io.github.dsjdevelopment.voyaz.api.service.DestinyService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,34 +35,34 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
-class TestimonyControllerTest {
+class DestinyControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @Autowired
-    private JacksonTester<TestimonyRegistrationData> testimonyRegistrationDataJson;
+    private JacksonTester<DestinyRegistrationData> destinyRegistrationDataJson;
 
     @Autowired
-    private JacksonTester<TestimonyUpdateData> testimonyUpdateDataJson;
+    private JacksonTester<DestinyUpdateData> destinyUpdateDataJson;
 
     @Autowired
-    private JacksonTester<TestimonyDetailData> testimonyDetailDataJson;
+    private JacksonTester<DestinyDetailData> destinyDetailDataJson;
 
     @Autowired
-    private JacksonTester<Page<TestimonyListData>> testimonyListDataJson;
+    private JacksonTester<Page<DestinyListData>> destinyListDataJson;
 
     @MockBean
-    private TestimonyService testimonyService;
-    
-    private TestimonyDetailData testimonyDetailData;
-    
+    private DestinyService destinyService;
+
+    private DestinyDetailData destinyDetailData;
+
     @BeforeEach
     void setUp() {
-        testimonyDetailData = new TestimonyDetailData(1L, "i.jpg", "am", "strong");
-        when(testimonyService.registerTestimony(any())).thenReturn(testimonyDetailData);
-        when(testimonyService.updateTestimony(any())).thenReturn(testimonyDetailData);
-        when(testimonyService.detailTestimony(any())).thenReturn(testimonyDetailData);
+        destinyDetailData = new DestinyDetailData(1L, "i.jpg", "am", new BigDecimal(1200));
+        when(destinyService.registerDestiny(any())).thenReturn(destinyDetailData);
+        when(destinyService.updateDestiny(any())).thenReturn(destinyDetailData);
+        when(destinyService.detailDestiny(any())).thenReturn(destinyDetailData);
     }
 
     @Test
@@ -69,7 +70,7 @@ class TestimonyControllerTest {
     @WithMockUser
     void register_scenario1() throws Exception {
         var response = mvc
-                .perform(post("/testimonials"))
+                .perform(post("/destinations"))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus())
@@ -82,11 +83,11 @@ class TestimonyControllerTest {
     void register_scenario2() throws Exception {
 
         var response = mvc
-                .perform(post("/testimonials")
+                .perform(post("/destinations")
                         .contentType("application/json")
-                        .content(testimonyRegistrationDataJson.write(new TestimonyRegistrationData("i.jpg", "am", "strong")).getJson()))
+                        .content(destinyRegistrationDataJson.write(new DestinyRegistrationData("i.jpg", "am", new BigDecimal(1200))).getJson()))
                 .andReturn().getResponse();
-        var waitJson = testimonyDetailDataJson.write(testimonyDetailData).getJson();
+        var waitJson = destinyDetailDataJson.write(destinyDetailData).getJson();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.getContentAsString()).isEqualTo(waitJson);
@@ -98,12 +99,12 @@ class TestimonyControllerTest {
     void update_scenario1() throws Exception {
 
         var response = mvc
-                .perform(put("/testimonials")
+                .perform(put("/destinations")
                         .contentType("application/json")
-                        .content(testimonyUpdateDataJson.write(new TestimonyUpdateData(1L, "i.jpg", "am", "strong")).getJson()))
+                        .content(destinyUpdateDataJson.write(new DestinyUpdateData(1L, "i.jpg", "am", new BigDecimal(1200))).getJson()))
                 .andReturn().getResponse();
 
-        var waitJson = testimonyDetailDataJson.write(testimonyDetailData).getJson();
+        var waitJson = destinyDetailDataJson.write(destinyDetailData).getJson();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).isEqualTo(waitJson);
@@ -114,12 +115,12 @@ class TestimonyControllerTest {
     @WithMockUser
     void update_scenario2() throws Exception {
 
-        doThrow(EntityNotFoundException.class).when(testimonyService).updateTestimony(any());
+        doThrow(EntityNotFoundException.class).when(destinyService).updateDestiny(any());
 
         var response = mvc
-                .perform(put("/testimonials")
+                .perform(put("/destinations")
                         .contentType("application/json")
-                        .content(testimonyUpdateDataJson.write(new TestimonyUpdateData(1L, "i.jpg", "am", "strong")).getJson()))
+                        .content(destinyUpdateDataJson.write(new DestinyUpdateData(1L, "i.jpg", "am", new BigDecimal(1200))).getJson()))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus())
@@ -131,8 +132,10 @@ class TestimonyControllerTest {
     @WithMockUser
     void delete_scenario1() throws Exception {
 
+
+
         var response = mvc
-                .perform(delete("/testimonials/1"))
+                .perform(delete("/destinations/1"))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
@@ -143,10 +146,10 @@ class TestimonyControllerTest {
     @WithMockUser
     void delete_scenario2() throws Exception {
 
-        doThrow(EntityNotFoundException.class).when(testimonyService).deleteTestimony(any());
+        doThrow(EntityNotFoundException.class).when(destinyService).deleteDestiny(any());
 
         var response = mvc
-                .perform(delete("/testimonials/1"))
+                .perform(delete("/destinations/1"))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
@@ -158,10 +161,10 @@ class TestimonyControllerTest {
     void detail_scenario1() throws Exception {
 
         var response = mvc
-                .perform(get("/testimonials/1"))
+                .perform(get("/destinations/1"))
                 .andReturn().getResponse();
 
-        var waitJson = testimonyDetailDataJson.write(testimonyDetailData).getJson();
+        var waitJson = destinyDetailDataJson.write(destinyDetailData).getJson();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).isEqualTo(waitJson);
@@ -172,35 +175,30 @@ class TestimonyControllerTest {
     @WithMockUser
     void detail_scenario2() throws Exception {
 
-        doThrow(EntityNotFoundException.class).when(testimonyService).detailTestimony(any());
+        doThrow(EntityNotFoundException.class).when(destinyService).detailDestiny(any());
 
         var response = mvc
-                .perform(get("/testimonials/1"))
+                .perform(get("/destinations/1"))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
-    @DisplayName("should return HTTP 200 with paginated testimonies")
+    @DisplayName("should return the http 200 code when the pagination is accepted")
     @WithMockUser
     void page_scenario1() throws Exception {
 
-        List<TestimonyListData> testimonyListData = Arrays.asList(
-                new TestimonyListData(1L, "i.jpg", "am", "strong"),
-                new TestimonyListData(2L, "i.jpg", "am", "strong"),
-                new TestimonyListData(3L, "i.jpg", "am", "strong"));
-
-        var testimonyPage = new PageImpl<>(testimonyListData);
-
-        when(testimonyService.list3Testimony(any())).thenReturn(testimonyPage);
+        List<DestinyListData> destinyList = List.of(new DestinyListData(1L, "i.jpg", "am", new BigDecimal(1200)));
+        var destinyPage = new PageImpl<>(destinyList);
+        when(destinyService.search(any(), any())).thenReturn(destinyPage);
 
         var response = mvc
-                .perform(get("/testimonials/testimonials-home"))
+                .perform(get("/destinations?name=am"))
                 .andReturn().getResponse();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        var waitJson = objectMapper.readTree(testimonyListDataJson.write(testimonyPage).getJson());
+        var waitJson = objectMapper.readTree(destinyListDataJson.write(destinyPage).getJson());
         var responseJson = objectMapper.readTree(response.getContentAsString());
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -208,6 +206,21 @@ class TestimonyControllerTest {
 
     }
 
+    @Test
+    @DisplayName("should return the http 400 code when the page is rejected")
+    @WithMockUser
+    void page_scenario2() throws Exception {
+
+        when(destinyService.search(any(), any())).thenThrow(new ExceptionValidation("No destinations found"));
+
+        var response = mvc
+                .perform(get("/destinations?name=am"))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.getContentAsString()).isEqualTo("{\"Message\":\"No destinations found\"}");
+
+    }
 }
 
 

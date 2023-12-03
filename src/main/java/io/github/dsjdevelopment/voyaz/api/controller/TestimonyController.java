@@ -1,6 +1,7 @@
 package io.github.dsjdevelopment.voyaz.api.controller;
 
 import io.github.dsjdevelopment.voyaz.api.domain.testimony.*;
+import io.github.dsjdevelopment.voyaz.api.service.TestimonyService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,6 @@ public class TestimonyController {
 
         var dto = testimonyService.registerTestimony(data);
         var uri = uriBuilder.path("/testimonials/{id}").buildAndExpand(dto.id()).toUri();
-
         return ResponseEntity.created(uri).body(dto);
 
     }
@@ -37,7 +37,6 @@ public class TestimonyController {
 
         var dto = testimonyService.updateTestimony(data);
         return ResponseEntity.ok(dto);
-
 
     }
 
@@ -56,7 +55,6 @@ public class TestimonyController {
         var dto = testimonyService.detailTestimony(id);
         return ResponseEntity.ok(dto);
 
-
     }
 
     @GetMapping("/testimonials-home")
@@ -65,5 +63,6 @@ public class TestimonyController {
 
         var page = testimonyService.list3Testimony(pagination);
         return ResponseEntity.ok(page);
+
     }
 }
