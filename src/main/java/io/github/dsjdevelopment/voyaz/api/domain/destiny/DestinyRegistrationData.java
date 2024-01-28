@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
-public record DestinyRegistrationData(@NotBlank String photo, @NotBlank String name,
-                                      @NotNull @Positive BigDecimal price) {
+public record DestinyRegistrationData(@NotBlank String photo1, @NotBlank String photo2, @NotBlank String name,
+                                      @NotNull @Positive BigDecimal price, @NotBlank String goal, String descriptiveText) {
 
 }

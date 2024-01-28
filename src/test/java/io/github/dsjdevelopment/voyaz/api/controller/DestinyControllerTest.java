@@ -56,10 +56,12 @@ class DestinyControllerTest {
     private DestinyService destinyService;
 
     private DestinyDetailData destinyDetailData;
+    private DestinyUpdateData destinyUpdateData;
 
     @BeforeEach
     void setUp() {
-        destinyDetailData = new DestinyDetailData(1L, "i.jpg", "am", new BigDecimal(1200));
+        destinyDetailData = new DestinyDetailData( 1L, "i.jpg", "am", "strong", new BigDecimal(1200), "goal", "descriptiveText");
+        destinyUpdateData = new DestinyUpdateData(1L, "i.jpg", "am", "strong", new BigDecimal(1200), "goal", "descriptiveText");
         when(destinyService.registerDestiny(any())).thenReturn(destinyDetailData);
         when(destinyService.updateDestiny(any())).thenReturn(destinyDetailData);
         when(destinyService.detailDestiny(any())).thenReturn(destinyDetailData);
@@ -85,7 +87,7 @@ class DestinyControllerTest {
         var response = mvc
                 .perform(post("/destinations")
                         .contentType("application/json")
-                        .content(destinyRegistrationDataJson.write(new DestinyRegistrationData("i.jpg", "am", new BigDecimal(1200))).getJson()))
+                        .content(destinyRegistrationDataJson.write(new DestinyRegistrationData( "i.jpg", "am", "strong", new BigDecimal(1200), "goal", "descriptiveText")).getJson()))
                 .andReturn().getResponse();
         var waitJson = destinyDetailDataJson.write(destinyDetailData).getJson();
 
@@ -101,7 +103,7 @@ class DestinyControllerTest {
         var response = mvc
                 .perform(put("/destinations")
                         .contentType("application/json")
-                        .content(destinyUpdateDataJson.write(new DestinyUpdateData(1L, "i.jpg", "am", new BigDecimal(1200))).getJson()))
+                        .content(destinyUpdateDataJson.write(destinyUpdateData).getJson()))
                 .andReturn().getResponse();
 
         var waitJson = destinyDetailDataJson.write(destinyDetailData).getJson();
@@ -120,7 +122,7 @@ class DestinyControllerTest {
         var response = mvc
                 .perform(put("/destinations")
                         .contentType("application/json")
-                        .content(destinyUpdateDataJson.write(new DestinyUpdateData(1L, "i.jpg", "am", new BigDecimal(1200))).getJson()))
+                        .content(destinyUpdateDataJson.write(destinyUpdateData).getJson()))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus())
@@ -189,7 +191,7 @@ class DestinyControllerTest {
     @WithMockUser
     void page_scenario1() throws Exception {
 
-        List<DestinyListData> destinyList = List.of(new DestinyListData(1L, "i.jpg", "am", new BigDecimal(1200)));
+        List<DestinyListData> destinyList = List.of(new DestinyListData(1L, "i.jpg", "am", "strong", new BigDecimal(1200), "goal", "descriptiveText"));
         var destinyPage = new PageImpl<>(destinyList);
         when(destinyService.search(any(), any())).thenReturn(destinyPage);
 

@@ -26,45 +26,35 @@ public class DestinyController {
     @PostMapping
     @Transactional
     public ResponseEntity<DestinyDetailData> register(@RequestBody @Valid DestinyRegistrationData data, UriComponentsBuilder uriBuilder) {
-
         var dto = destinyService.registerDestiny(data);
         var uri = uriBuilder.path("/destinations/{id}").buildAndExpand(dto.id()).toUri();
         return ResponseEntity.created(uri).body(dto);
-
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<DestinyDetailData> update(@RequestBody @Valid DestinyUpdateData data) {
-
         var dto = destinyService.updateDestiny(data);
         return ResponseEntity.ok(dto);
-
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<?> delete(@PathVariable Long id) {
-
         destinyService.deleteDestiny(id);
         return ResponseEntity.noContent().build();
-
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DestinyDetailData> detail(@PathVariable Long id) {
-
         var dto = destinyService.detailDestiny(id);
         return ResponseEntity.ok(dto);
-
     }
 
     @GetMapping
     public ResponseEntity<Page<DestinyListData>> search(@RequestParam String name, Pageable pagination) {
-
             var page = destinyService.search(name, pagination);
             return ResponseEntity.ok(page);
-
     }
 
 }

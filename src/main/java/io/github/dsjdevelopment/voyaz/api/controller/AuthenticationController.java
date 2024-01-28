@@ -33,9 +33,7 @@ public class AuthenticationController {
     public ResponseEntity<JWTTokenData> logIn(@RequestBody @Valid AuthenticationData data) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var authentication = manager.authenticate(authenticationToken);
-
         var tokenJWT = tokenService.generateToken((User) authentication.getPrincipal());
-
         return ResponseEntity.ok(new JWTTokenData(tokenJWT));
     }
 }

@@ -22,36 +22,28 @@ public class UserController {
     @PostMapping
     @Transactional
     public ResponseEntity<?> register(@RequestBody @Valid UserRegistrationData data, UriComponentsBuilder uriBuilder) {
-
         var dto = userService.registerUser(data);
         var uri = uriBuilder.path("/testimonials/{id}").buildAndExpand(dto.id()).toUri();
         return ResponseEntity.created(uri).body(dto);
-
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<?> update(@RequestBody @Valid UserUpdateData data) {
-
         var dto = userService.updateUser(data);
         return ResponseEntity.ok(dto);
-
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<?> delete(@PathVariable Long id) {
-
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
-
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> detail(@PathVariable Long id) {
-
         var dto = userService.detailUser(id);
         return ResponseEntity.ok(dto);
-
     }
 }
