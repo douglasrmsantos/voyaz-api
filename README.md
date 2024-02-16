@@ -22,6 +22,7 @@ This API provides the backend services for Voyaz, a fictional travel agency. See
 
 - [JDK 17](https://www.oracle.com/br/java/technologies/downloads/#jdk17-windows) installed
 - [Maven](https://maven.apache.org/download.cgi) installed
+- [OpenAi API Key](https://platform.openai.com) (Optional)
 
 ###  Database Configuration
 
@@ -31,6 +32,13 @@ Edit the database connection settings in the `application.properties` file.
 spring.datasource.url=your_database/voyaz_api?createDatabaseIfNotExist=true
 spring.datasource.username=your_username
 spring.datasource.password=your_password
+openai.api.key=your-openai-api-key
+jwt.security.token.secret=your-jwt-secret-token
+```
+Optionals
+```
+openai.model=gpt-3.5-turbo 
+openai.api.url=https://api.openai.com/v1/chat/completions
 ```
 ## ▶️ Running the Project
 
